@@ -8,10 +8,10 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="certbot-dns-aliyun-next",
-    version="1.0.1",
+    version="1.0.2",
     author="tiyee",
     author_email="tiyee@live.com",
-    description="阿里云DNS插件，用于Certbot的DNS-01验证",
+    description="阿里云DNS插件，用于Certbot的DNS-01验证，支持泛域名，支持python3.6及以上(更低版本没测试，不保证可行)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/tiyee/certbot-dns-aliyun-next",
@@ -24,11 +24,14 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Security",
         "Topic :: System :: Installation/Setup",
@@ -36,7 +39,7 @@ setup(
         "Topic :: System :: Systems Administration",
         "Topic :: Utilities",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.6",
     install_requires=requirements,
     entry_points={
         "certbot.plugins": [
