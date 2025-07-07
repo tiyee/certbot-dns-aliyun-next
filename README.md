@@ -5,6 +5,8 @@
 ## 功能特性
 
 - 支持通过阿里云DNS API自动管理DNS记录
+- 支持泛域名
+- 支持certbot 3+ 版本(更低没测试)
 - 兼容 Python 3.6+ 版本
 - 支持 DNS-01 验证方式
 - 自动清理临时DNS记录
@@ -15,6 +17,7 @@
 ### 从 PyPI 安装
 
 ```bash
+
 pip3 install certbot-dns-aliyun-next
 
 ```
@@ -22,7 +25,7 @@ pip3 install certbot-dns-aliyun-next
 ## 配置文件
 
 
-```
+```ini
 dns_aliyun_next_access_key_id = ??
 dns_aliyun_next_access_key_secret = ??
 dns_aliyun_next_region_id = cn-hangzhou
