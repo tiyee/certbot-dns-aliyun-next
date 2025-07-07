@@ -29,7 +29,7 @@ dns_aliyun_next_region_id = cn-hangzhou
 
 ```
 
-修改配置文件权限(假如是~/aliyun.ini)
+修改配置文件权限(假如文件是~/aliyun.ini)
 
 `chmod 600 ~/aliyun.ini`
 
@@ -41,7 +41,7 @@ dns_aliyun_next_region_id = cn-hangzhou
 certbot certonly  \
   --authenticator dns-aliyun-next \
   --dns-aliyun-next-credentials ~/aliyun.ini  \
-  --dns-aliyun-next-propagation-seconds 30
+  --dns-aliyun-next-propagation-seconds 30 \
   -d "*.example.com" \
   -d "example.com"
 
