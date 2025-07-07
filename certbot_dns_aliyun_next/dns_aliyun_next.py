@@ -30,7 +30,7 @@ class Authenticator(dns_common.DNSAuthenticator):
     @classmethod
     def add_parser_arguments(cls, add: Callable[..., None]) -> None:
         """添加命令行参数"""
-        super().add_parser_arguments(add, default_propagation_seconds=120)
+        super().add_parser_arguments(add, default_propagation_seconds=30)
         add("credentials", help="阿里云API凭证文件路径")
 
     def more_info(self) -> str:
@@ -48,7 +48,7 @@ class Authenticator(dns_common.DNSAuthenticator):
             {
                 "access_key_id": "阿里云AccessKey ID",
                 "access_key_secret": "阿里云AccessKey Secret",
-                "region_id": "阿里云地域ID (可选，默认为cn-hangzhou)"
+               # "region_id": "阿里云地域ID (可选，默认为cn-hangzhou)"
             }
         )
 
