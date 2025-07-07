@@ -8,13 +8,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="certbot-dns-aliyun-next",
-    version="1.0.3",
+    version="1.0.4",
     author="tiyee",
     author_email="tiyee@live.com",
     description="阿里云DNS插件，用于Certbot的DNS-01验证，支持泛域名，支持python3.6及以上(更低版本没测试，不保证可行)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/tiyee/certbot-dns-aliyun-next",
+    license='MIT',
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
