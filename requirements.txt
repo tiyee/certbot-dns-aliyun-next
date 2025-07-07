@@ -1,0 +1,11 @@
+certbot>=3.0.0
+zope.interface
+alibabacloud-alidns20150109>=3.0.0
+alibabacloud-tea-openapi>=0.3.0
+alibabacloud-tea-util>=0.3.0
+alibabacloud-endpoint-util>=0.0.3
+setuptools~=78.1.0
+alibabacloud_tea_openapi~=0.3.16
+alibabacloud_tea_util~=0.3.13
+alibabacloud_tea_openapi~=0.3.16
+alibabacloud_tea_util~=0.3.13
