@@ -9,7 +9,7 @@ authors = [
     {name = "tiyee", email = "tiyee@live.com"}
 ]
 description = "阿里云DNS插件，用于Certbot的DNS-01验证"
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
 license = {text = "MIT"}
 keywords = [
@@ -22,6 +22,7 @@ keywords = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Plugins",
+    "License :: OSI Approved :: MIT License",
     "Intended Audience :: System Administrators",
     "Operating System :: POSIX",
     "Operating System :: POSIX :: Linux",
@@ -40,9 +41,11 @@ classifiers = [
     "Topic :: System :: Systems Administration",
     "Topic :: Utilities"
 ]
-
+dynamic = ["dependencies"]
 [project.urls]
 Homepage = "https://github.com/tiyee/certbot-dns-aliyun-next"
+Repository = "https://github.com/tiyee/certbot-dns-aliyun-next"
+Issues = "https://github.com/tiyee/certbot-dns-aliyun-next/issues"
 
 [project.entry-points."certbot.plugins"]
 dns-aliyun-next = "certbot_dns_aliyun_next.dns_aliyun_next:Authenticator"
