@@ -59,7 +59,7 @@ jobs:
       #
       # ALTERNATIVE: if your GitHub Release name is the PyPI project version string
       # ALTERNATIVE: exactly, uncomment the following line instead:
-      url: https://pypi.org/project/certbot-dns-aliyun-next/${{ github.event.release.name }}
+      url: https://pypi.org/p/certbot-dns-aliyun-next
 
     steps:
       - name: Retrieve release distributions
