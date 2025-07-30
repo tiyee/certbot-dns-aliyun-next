@@ -46,6 +46,7 @@ dynamic = ["dependencies"]
 Homepage = "https://github.com/tiyee/certbot-dns-aliyun-next"
 Repository = "https://github.com/tiyee/certbot-dns-aliyun-next"
 Issues = "https://github.com/tiyee/certbot-dns-aliyun-next/issues"
+Documentation = "https://github.com/tiyee/certbot-dns-aliyun-next/blob/master/README.md"
 
 [project.entry-points."certbot.plugins"]
 dns-aliyun-next = "certbot_dns_aliyun_next.dns_aliyun_next:Authenticator"
