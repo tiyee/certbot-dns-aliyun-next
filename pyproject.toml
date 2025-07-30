@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "certbot-dns-aliyun-next"
+version = "1.0.0"
+authors = [
+    {name = "tiyee", email = "tiyee@live.com"}
+]
+description = "阿里云DNS插件，用于Certbot的DNS-01验证"
+readme = "README.md"
+readme-content-type = "text/markdown"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+keywords = [
+    "certbot-dns",
+    "certbot-plugin",
+    "certbot-dns-plugin",
+    "certbot-dns-authenticator",
+    "certbot-aliyun"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Plugins",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Security",
+    "Topic :: System :: Installation/Setup",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities"
+]
+
+[project.urls]
+Homepage = "https://github.com/tiyee/certbot-dns-aliyun-next"
+
+[project.entry-points."certbot.plugins"]
+dns-aliyun-next = "certbot_dns_aliyun_next.dns_aliyun_next:Authenticator"
+
+[tool.setuptools]
+packages = ["certbot_dns_aliyun_next"]  # 如果包名不是自动发现的，可以明确指定
+include-package-data = true
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
