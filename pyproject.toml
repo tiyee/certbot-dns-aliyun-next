@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "certbot-dns-aliyun-next"
-version = "1.0.0"
+version = "1.0.6"
 authors = [
     {name = "tiyee", email = "tiyee@live.com"}
 ]
