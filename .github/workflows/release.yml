@@ -29,12 +29,9 @@ jobs:
       - name: Build release distributions
         run: |
           # NOTE: put your own distribution build steps here.
-          python -m pip install -r requirements.txt
-          python setup.py sdist bdist_wheel
+          python -m pip install --upgrade pip setuptools wheel build
           #python -m pip install build
-          #python -m build
-          python -m pip install --upgrade setuptools wheel
-          python setup.py sdist bdist_wheel
+          python -m build
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4
