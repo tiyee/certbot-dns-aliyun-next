@@ -28,7 +28,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         self.credentials: Optional[dns_common.CredentialsConfiguration] = None
 
     @classmethod
-    def add_parser_arguments(cls, add: Callable[..., None], default_propagation_seconds: int = 30) -> None:
+    def add_parser_arguments(cls, add: Callable[..., None], default_propagation_seconds: int = 20) -> None:
         """添加命令行参数"""
         super().add_parser_arguments(add, default_propagation_seconds)
         add("credentials", help="阿里云API凭证文件路径")
