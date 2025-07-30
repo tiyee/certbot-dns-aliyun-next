@@ -10,7 +10,6 @@ authors = [
 ]
 description = "阿里云DNS插件，用于Certbot的DNS-01验证"
 readme = "README.md"
-readme-content-type = "text/markdown"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 keywords = [
