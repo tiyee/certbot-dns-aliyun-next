@@ -62,3 +62,6 @@ AliyunDNSFullAccess 或自定义权限策略包含：
 * alidns:DescribeDomainRecords
 * alidns:UpdateDomainRecord
 
+## 自动部署
+
+此程序只是certbot的dns验证插件，如果需要自动运行申请部署，可以使用[AutoCert](https://github.com/tiyee/AutoCert).
