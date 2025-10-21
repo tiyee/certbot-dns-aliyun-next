@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "certbot-dns-aliyun-next"
-version = "1.0.6"
+version = "1.0.7"
 authors = [
     {name = "tiyee", email = "tiyee@live.com"}
 ]
@@ -34,6 +34,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Security",
     "Topic :: System :: Installation/Setup",
