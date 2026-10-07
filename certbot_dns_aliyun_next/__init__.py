@@ -1,5 +1,5 @@
-"""
-阿里云DNS插件，用于Certbot的DNS-01验证
-"""
+"""Alibaba Cloud DNS authenticator for Certbot 3 and 5."""
 
-__version__ = "1.0.0"
+from certbot_dns_aliyun_next.compat import metadata
+
+__version__ = metadata.version("certbot-dns-aliyun-next")
