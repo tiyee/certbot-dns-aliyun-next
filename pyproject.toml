@@ -1,60 +1,78 @@
 [build-system]
-requires = ["setuptools>=64.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
 
 [project]
 name = "certbot-dns-aliyun-next"
-version = "1.0.7"
-authors = [
-    {name = "tiyee", email = "tiyee@live.com"}
-]
-description = "阿里云DNS插件，用于Certbot的DNS-01验证"
-readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.8"
-license = {text = "MIT"}
-keywords = [
-    "certbot-dns",
-    "certbot-plugin",
-    "certbot-dns-plugin",
-    "certbot-dns-authenticator",
-    "certbot-aliyun"
-]
+version = "2.0.0"
+description = "阿里云 DNS 插件，用于 Certbot 的 DNS-01 验证"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "tiyee", email = "tiyee@live.com"}]
+keywords = ["certbot", "dns-01", "acme", "aliyun"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Plugins",
-    "License :: OSI Approved :: MIT License",
     "Intended Audience :: System Administrators",
-    "Operating System :: POSIX",
-    "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Topic :: Internet :: WWW/HTTP",
     "Topic :: Security",
-    "Topic :: System :: Installation/Setup",
-    "Topic :: System :: Networking",
-    "Topic :: System :: Systems Administration",
-    "Topic :: Utilities"
 ]
-dynamic = ["dependencies"]
+dependencies = [
+    "certbot>=3,<4; python_version < '3.10'",
+    "certbot>=3,<6; python_version >= '3.10' and python_version < '3.14'",
+    # josepy 1.x used by Certbot 3 cannot import on Python 3.14 (PEP 649).
+    "certbot>=5,<6; python_version >= '3.14'",
+    "acme>=3,<6",
+    # Certbot 3/josepy 1 still needs APIs removed in PyOpenSSL 25.
+    "pyopenssl<25; python_version < '3.10'",
+    "alibabacloud-alidns20150109>=3,<5",
+    "alibabacloud-tea-openapi>=0.3,<1",
+    "alibabacloud-tea-util>=0.3,<1",
+    "importlib-metadata>=4.6,<9; python_version < '3.10'",
+]
+
 [project.urls]
 Homepage = "https://github.com/tiyee/certbot-dns-aliyun-next"
 Repository = "https://github.com/tiyee/certbot-dns-aliyun-next"
 Issues = "https://github.com/tiyee/certbot-dns-aliyun-next/issues"
-Documentation = "https://github.com/tiyee/certbot-dns-aliyun-next/blob/master/README.md"
 
 [project.entry-points."certbot.plugins"]
 dns-aliyun-next = "certbot_dns_aliyun_next.dns_aliyun_next:Authenticator"
 
-[tool.setuptools]
-packages = ["certbot_dns_aliyun_next"]  # 如果包名不是自动发现的，可以明确指定
-include-package-data = true
+[dependency-groups]
+dev = [
+    "pytest>=8,<10", "pytest-cov>=5,<8", "ruff>=0.11,<1",
+    "tox>=4.28,<5", "tox-uv>=1.26,<2", "twine>=6,<7",
+    "tomli>=2,<3; python_version < '3.11'",
+]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[tool.hatch.build.targets.wheel]
+packages = ["certbot_dns_aliyun_next"]
+core-metadata-version = "2.4"
+
+[tool.hatch.build.targets.sdist]
+include = ["/certbot_dns_aliyun_next", "/tests", "/scripts", "/examples", "/README.md", "/CHANGELOG.md", "/LICENSE", "/pyproject.toml", "/tox.ini", "/uv.lock"]
+core-metadata-version = "2.4"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "TID251"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"os" = {msg = "Use from certbot.compat import os for cross-platform compatibility."}

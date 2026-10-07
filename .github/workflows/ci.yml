@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: latest
+          enable-cache: true
+          python-version: "3.13"
+      - run: uv sync --locked
+      - run: uv run --no-sync ruff check .
+      - run: uv run --no-sync ruff format --check .
+      - run: uv run --no-sync pytest --cov=certbot_dns_aliyun_next --cov-report=term-missing
+      - name: Validate release tag
+        if: github.event_name == 'release'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          uv run --no-sync python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          from certbot.compat import os
+          version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          if os.environ["RELEASE_TAG"] != f"v{version}":
+              raise SystemExit(f"Release tag must be v{version}")
+          PY
+      - run: uv build
+      - run: uv run --no-sync twine check --strict dist/*
+      - name: Save release distributions
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: distributions
+          path: dist/*
+
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.9"
+            tox-env: py39-certbot3
+          - python: "3.10"
+            tox-env: py310-certbot3
+          - python: "3.11"
+            tox-env: py311-certbot3
+          - python: "3.12"
+            tox-env: py312-certbot3
+          - python: "3.13"
+            tox-env: py313-certbot3
+          - python: "3.10"
+            tox-env: py310-certbot5
+          - python: "3.11"
+            tox-env: py311-certbot5
+          - python: "3.12"
+            tox-env: py312-certbot5
+          - python: "3.13"
+            tox-env: py313-certbot5
+          - python: "3.14"
+            tox-env: py314-certbot5
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: latest
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+      - run: uv sync --locked
+      - run: uv run --no-sync tox run -e ${{ matrix.tox-env }}

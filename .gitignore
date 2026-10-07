@@ -209,3 +209,4 @@ __marimo__/
 /.idea
 /venv
 aliyun.ini
+!examples/aliyun.ini

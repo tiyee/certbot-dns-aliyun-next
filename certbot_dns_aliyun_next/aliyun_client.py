@@ -1,163 +1,146 @@
-"""
-阿里云DNS API客户端
-"""
+"""Alibaba Cloud DNS operations using the official SDK and real request models."""
 
-import logging
-from typing import Any, Dict, List
+from typing import Optional
 
-from alibabacloud_alidns20150109 import models as alidns_20150109_models
-from alibabacloud_alidns20150109.client import Client as Alidns20150109Client
-from alibabacloud_tea_openapi import models as open_api_models
-
-logger = logging.getLogger(__name__)
+from alibabacloud_alidns20150109 import models
+from alibabacloud_alidns20150109.client import Client
+from alibabacloud_tea_openapi.models import Config
+from alibabacloud_tea_util.models import RuntimeOptions
+from certbot import errors
+from Tea.exceptions import TeaException, UnretryableException
 
 
 class AliCloudDNSClient:
-    """阿里云DNS客户端"""
+    """Manage individual records without replacing an existing TXT RRset."""
 
-    def __init__(self, access_key_id: str, access_key_secret: str, region_id: str = "cn-hangzhou"):
-        """
-        初始化阿里云DNS客户端
+    page_size = 100
 
-        :param access_key_id: 阿里云AccessKey ID
-        :param access_key_secret: 阿里云AccessKey Secret
-        :param region_id: 地域ID，默认为cn-hangzhou
-        """
-        self.access_key_id = access_key_id
-        self.access_key_secret = access_key_secret
-        self.region_id = region_id
-        self.client = self._create_client()
-
-    def _create_client(self) -> Alidns20150109Client:
-        """创建阿里云DNS客户端"""
-        config = open_api_models.Config(
-            access_key_id=self.access_key_id,
-            access_key_secret=self.access_key_secret,
-            region_id=self.region_id
-        )
-        config.endpoint = f"alidns.{self.region_id}.aliyuncs.com"
-        return Alidns20150109Client(config)
-
-    def get_domain_records(self, domain_name: str, rr: str, record_type: str = "TXT") -> List[Dict[str, Any]]:
-        """
-        获取域名记录
-
-        :param domain_name: 域名
-        :param rr: 主机记录
-        :param record_type: 记录类型
-        :return: 记录列表
-        """
-        try:
-            request = alidns_20150109_models.DescribeDomainRecordsRequest(
-                domain_name=domain_name,
-                rrkey_word=rr,
-                type=record_type
+    def __init__(
+        self,
+        access_key_id: str,
+        access_key_secret: str,
+        region_id: str = "cn-hangzhou",
+        *,
+        security_token: Optional[str] = None,
+    ) -> None:
+        self.client = Client(
+            Config(
+                access_key_id=access_key_id,
+                access_key_secret=access_key_secret,
+                security_token=security_token,
+                region_id=region_id,
+                endpoint="alidns.aliyuncs.com",
             )
-            response = self.client.describe_domain_records(request)
+        )
+        # Do not replay a write after a timeout: it may already have succeeded.
+        self.runtime = RuntimeOptions(connect_timeout=10000, read_timeout=30000, autoretry=False)
 
-            if response.body and response.body.domain_records:
-                return [
-                    {
-                        "record_id": record.record_id,
-                        "rr": record.rr,
-                        "type": record.type,
-                        "value": record.value,
-                        "ttl": record.ttl,
-                        "line": record.line
-                    }
-                    for record in response.body.domain_records.record
-                ]
-            return []
-        except Exception as e:
-            logger.error(f"获取域名记录失败: {e}")
-            raise
-
-    def add_domain_record(self, domain_name: str, rr: str, record_type: str, value: str, ttl: int = 600) -> str:
-        """
-        添加域名记录
-
-        :param domain_name: 域名
-        :param rr: 主机记录
-        :param record_type: 记录类型
-        :param value: 记录值
-        :param ttl: TTL值
-        :return: 记录ID
-        """
+    def _call(self, operation: str, request):
         try:
-            request = alidns_20150109_models.AddDomainRecordRequest(
+            body = getattr(self.client, operation)(request, self.runtime).body
+        except (TeaException, UnretryableException) as exc:
+            # SDK error messages may contain sensitive request information.
+            code = getattr(exc, "code", None) or type(exc).__name__
+            raise errors.PluginError(f"Aliyun DNS {operation} failed ({code})") from exc
+        if body is None:
+            raise errors.PluginError(f"Aliyun DNS {operation} returned an empty response")
+        return body
+
+    def list_zones(self) -> list[str]:
+        zones = []
+        page = 1
+        while True:
+            body = self._call(
+                "describe_domains_with_options",
+                models.DescribeDomainsRequest(page_number=page, page_size=self.page_size),
+            )
+            items = (body.domains.domain if body.domains else None) or []
+            zones.extend(item.domain_name for item in items)
+            if body.total_count is None or (not items and page * self.page_size < body.total_count):
+                raise errors.PluginError("Aliyun DNS returned an incomplete zone list")
+            if page * self.page_size >= body.total_count:
+                return zones
+            page += 1
+
+    def get_domain_records(self, domain_name: str, rr: str, record_type: str = "TXT") -> list[dict]:
+        records = []
+        page = 1
+        while True:
+            body = self._call(
+                "describe_domain_records_with_options",
+                models.DescribeDomainRecordsRequest(
+                    domain_name=domain_name,
+                    rrkey_word=rr,
+                    type=record_type,
+                    search_mode="EXACT",
+                    page_number=page,
+                    page_size=self.page_size,
+                ),
+            )
+            items = (body.domain_records.record if body.domain_records else None) or []
+            records.extend(
+                {
+                    "record_id": str(item.record_id),
+                    "rr": item.rr,
+                    "type": item.type,
+                    "value": item.value,
+                    "ttl": item.ttl,
+                    "line": item.line,
+                }
+                for item in items
+                if item.record_id
+                and item.type == record_type
+                and item.rr.lower() == rr.lower()
+                and item.status == "ENABLE"
+                and item.line == "default"
+            )
+            if body.total_count is None or (not items and page * self.page_size < body.total_count):
+                raise errors.PluginError("Aliyun DNS returned an incomplete record list")
+            if page * self.page_size >= body.total_count:
+                return records
+            page += 1
+
+    def add_domain_record(
+        self, domain_name: str, rr: str, record_type: str, value: str, ttl: int = 600
+    ) -> str:
+        body = self._call(
+            "add_domain_record_with_options",
+            models.AddDomainRecordRequest(
                 domain_name=domain_name,
                 rr=rr,
                 type=record_type,
                 value=value,
-                ttl=ttl
-            )
-            response = self.client.add_domain_record(request)
-
-            if response.body and response.body.record_id:
-                logger.info(f"成功添加DNS记录: {rr}.{domain_name} -> {value}")
-                return response.body.record_id
-            else:
-                raise Exception("添加记录失败，未返回记录ID")
-        except Exception as e:
-            logger.error(f"添加域名记录失败: {e}")
-            raise
+                ttl=ttl,
+                line="default",
+            ),
+        )
+        if not body.record_id:
+            raise errors.PluginError("Aliyun DNS did not return a new record ID")
+        return str(body.record_id)
 
     def delete_domain_record(self, record_id: str) -> bool:
-        """
-        删除域名记录
-
-        :param record_id: 记录ID
-        :return: 是否成功
-        """
         try:
-            request = alidns_20150109_models.DeleteDomainRecordRequest(
-                record_id=record_id
+            self._call(
+                "delete_domain_record_with_options",
+                models.DeleteDomainRecordRequest(record_id=record_id),
             )
-            response = self.client.delete_domain_record(request)
+        except errors.PluginError as exc:
+            if getattr(exc.__cause__, "code", None) != "InvalidRecordId.NotFound":
+                raise
+        return True
 
-            logger.info(f"成功删除DNS记录: {record_id} {response.status_code}")
-            return True
-        except Exception as e:
-            logger.error(f"删除域名记录失败: {e}")
-            raise
-
-    def update_domain_record(self, record_id: str, rr: str, record_type: str, value: str, ttl: int = 600) -> bool:
-        """
-        更新域名记录
-
-        :param record_id: 记录ID
-        :param rr: 主机记录
-        :param record_type: 记录类型
-        :param value: 记录值
-        :param ttl: TTL值
-        :return: 是否成功
-        """
-        try:
-            request = alidns_20150109_models.UpdateDomainRecordRequest(
+    def update_domain_record(
+        self, record_id: str, rr: str, record_type: str, value: str, ttl: int = 600
+    ) -> bool:
+        """Retain the old client API; the authenticator never updates existing records."""
+        self._call(
+            "update_domain_record_with_options",
+            models.UpdateDomainRecordRequest(
                 record_id=record_id,
                 rr=rr,
                 type=record_type,
                 value=value,
-                ttl=ttl
-            )
-            response = self.client.update_domain_record(request)
-
-            logger.info(f"成功更新DNS记录: {record_id} {response.status_code}")
-            return True
-        except Exception as e:
-            logger.error(f"更新域名记录失败: {e}")
-            raise
-
-    @staticmethod
-    def get_root_domain(domain: str) -> str:
-        """
-        获取根域名
-
-        :param domain: 完整域名
-        :return: 根域名
-        """
-        # 简单的根域名提取逻辑，可以根据需要完善
-        parts = domain.split('.')
-        if len(parts) >= 2:
-            return '.'.join(parts[-2:])
-        return domain
+                ttl=ttl,
+            ),
+        )
+        return True
