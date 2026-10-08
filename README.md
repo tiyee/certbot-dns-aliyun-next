@@ -6,14 +6,15 @@
 
 - 支持通过阿里云 DNS API 自动管理 DNS 记录
 - 支持普通域名、子域名和泛域名
-- 支持 Certbot 3 和 5
+- 支持 Certbot 3、4 和 5
 - 兼容 Python 3.9–3.14
 - 支持 DNS-01 验证方式
 - 自动清理本次创建的临时 DNS 记录，保留已有记录
 - 支持 STS 临时凭证
 - 完善的错误处理和日志记录
 
-Python 3.9 使用 Certbot 3，Python 3.10–3.13 支持 Certbot 3 和 5，Python 3.14 使用 Certbot 5。
+Python 3.9 支持 Certbot 3 和 4，Python 3.10–3.13 支持 Certbot 3、4 和 5，Python 3.14 支持 Certbot 4 和 5。
+使用 Certbot 3 时需安装 `pyopenssl<25`，Certbot 4 和 5 由上游依赖选择兼容版本。
 
 ## 安装
 

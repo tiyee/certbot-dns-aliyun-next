@@ -635,7 +635,7 @@ wheels = [
 
 [[package]]
 name = "certbot-dns-aliyun-next"
-version = "2.0.0"
+version = "2.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "acme", version = "3.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
@@ -646,11 +646,12 @@ dependencies = [
     { name = "certbot", version = "3.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "certbot", version = "5.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "importlib-metadata", version = "8.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "pyopenssl", version = "24.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "certbot", version = "3.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "pyopenssl", version = "24.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pytest", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pytest", version = "9.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "pytest-cov" },
@@ -669,15 +670,16 @@ requires-dist = [
     { name = "alibabacloud-alidns20150109", specifier = ">=3,<5" },
     { name = "alibabacloud-tea-openapi", specifier = ">=0.3,<1" },
     { name = "alibabacloud-tea-util", specifier = ">=0.3,<1" },
-    { name = "certbot", marker = "python_full_version < '3.10'", specifier = ">=3,<4" },
+    { name = "certbot", marker = "python_full_version < '3.10'", specifier = ">=3,<5" },
     { name = "certbot", marker = "python_full_version >= '3.10' and python_full_version < '3.14'", specifier = ">=3,<6" },
-    { name = "certbot", marker = "python_full_version >= '3.14'", specifier = ">=5,<6" },
+    { name = "certbot", marker = "python_full_version >= '3.14'", specifier = ">=4,<6" },
     { name = "importlib-metadata", marker = "python_full_version < '3.10'", specifier = ">=4.6,<9" },
-    { name = "pyopenssl", marker = "python_full_version < '3.10'", specifier = "<25" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "certbot", marker = "python_full_version < '3.10'", specifier = ">=3,<4" },
+    { name = "pyopenssl", marker = "python_full_version < '3.10'", specifier = "<25" },
     { name = "pytest", specifier = ">=8,<10" },
     { name = "pytest-cov", specifier = ">=5,<8" },
     { name = "ruff", specifier = ">=0.11,<1" },

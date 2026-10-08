@@ -60,6 +60,18 @@ jobs:
             tox-env: py312-certbot3
           - python: "3.13"
             tox-env: py313-certbot3
+          - python: "3.9"
+            tox-env: py39-certbot4
+          - python: "3.10"
+            tox-env: py310-certbot4
+          - python: "3.11"
+            tox-env: py311-certbot4
+          - python: "3.12"
+            tox-env: py312-certbot4
+          - python: "3.13"
+            tox-env: py313-certbot4
+          - python: "3.14"
+            tox-env: py314-certbot4
           - python: "3.10"
             tox-env: py310-certbot5
           - python: "3.11"

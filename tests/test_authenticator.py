@@ -85,7 +85,7 @@ def test_cleanup_error_can_be_retried(helper, caplog):
 
 
 def test_certbot_public_lifecycle_uses_real_acme_challenges(authenticator, helper, monkeypatch):
-    # Certbot 3 uses domain; newer Certbot 5 uses identifier. Construct actual
+    # Certbot 3 and 4 use domain; newer Certbot 5 uses identifier. Construct actual
     # annotated challenges so a Mock cannot hide host API incompatibilities.
     key = josepy.JWKRSA(key=rsa.generate_private_key(public_exponent=65537, key_size=2048))
     achalls = []
