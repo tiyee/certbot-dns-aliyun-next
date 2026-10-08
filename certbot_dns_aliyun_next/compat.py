@@ -1,7 +1,7 @@
 """Keep host compatibility in one place, using Certbot's public APIs.
 
 DNSAuthenticator already handles the annotated-challenge API changes between
-Certbot 3 and 5. Inherit its public lifecycle instead of copying it or applying
+Certbot 3, 4 and 5. Inherit its public lifecycle instead of copying it or applying
 the obsolete zope.interface decorators (removed from Certbot's dependencies).
 """
 

@@ -1,5 +1,10 @@
 # 更新记录
 
+## 2.0.1
+
+- 增加 Certbot 4 支持，覆盖 Python 3.9–3.14；调整依赖边界，将 Certbot 3 的 PyOpenSSL 限制移至开发和测试环境。
+- tox-uv 和 CI 扩展至 Certbot 3/4/5 共 16 组 wheel 兼容测试，发布流程复用完整矩阵。
+
 ## 2.0.0
 
 - 支持 Python 3.9–3.14，Certbot 3 和 5 共用一个实现；Python 3.9 使用 Certbot 3，Python 3.14 使用 Certbot 5（Certbot 3 的 josepy 1.x 不兼容延迟注解）。

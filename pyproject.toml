@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "certbot-dns-aliyun-next"
-version = "2.0.0"
+version = "2.0.1"
 description = "阿里云 DNS 插件，用于 Certbot 的 DNS-01 验证"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -27,13 +27,11 @@ classifiers = [
     "Topic :: Security",
 ]
 dependencies = [
-    "certbot>=3,<4; python_version < '3.10'",
+    "certbot>=3,<5; python_version < '3.10'",
     "certbot>=3,<6; python_version >= '3.10' and python_version < '3.14'",
     # josepy 1.x used by Certbot 3 cannot import on Python 3.14 (PEP 649).
-    "certbot>=5,<6; python_version >= '3.14'",
+    "certbot>=4,<6; python_version >= '3.14'",
     "acme>=3,<6",
-    # Certbot 3/josepy 1 still needs APIs removed in PyOpenSSL 25.
-    "pyopenssl<25; python_version < '3.10'",
     "alibabacloud-alidns20150109>=3,<5",
     "alibabacloud-tea-openapi>=0.3,<1",
     "alibabacloud-tea-util>=0.3,<1",
@@ -50,6 +48,9 @@ dns-aliyun-next = "certbot_dns_aliyun_next.dns_aliyun_next:Authenticator"
 
 [dependency-groups]
 dev = [
+    # Keep the Python 3.9 dev host on Certbot 3; ACME 4 requires PyOpenSSL >=25.
+    "certbot>=3,<4; python_version < '3.10'",
+    "pyopenssl<25; python_version < '3.10'",
     "pytest>=8,<10", "pytest-cov>=5,<8", "ruff>=0.11,<1",
     "tox>=4.28,<5", "tox-uv>=1.26,<2", "twine>=6,<7",
     "tomli>=2,<3; python_version < '3.11'",
