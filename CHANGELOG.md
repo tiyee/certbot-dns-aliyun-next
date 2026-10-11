@@ -1,5 +1,9 @@
 # 更新记录
 
+## 2.0.2
+
+- 支持 Python 3.15 搭配 Certbot 4 和 5，tox-uv 和 CI 扩展至 18 组 wheel 兼容测试。
+
 ## 2.0.1
 
 - 增加 Certbot 4 支持，覆盖 Python 3.9–3.14；调整依赖边界，将 Certbot 3 的 PyOpenSSL 限制移至开发和测试环境。
