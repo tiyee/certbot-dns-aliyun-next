@@ -3,6 +3,8 @@
 这是一个用于 Certbot 的阿里云 DNS 插件，支持通过阿里云 DNS API 进行 DNS-01 验证来获取 SSL 证书。支持泛域名。
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tiyee/certbot-dns-aliyun-next/badge)](https://scorecard.dev/viewer/?uri=github.com/tiyee/certbot-dns-aliyun-next)
+[![PyPI version](https://badge.fury.io/py/certbot-dns-aliyun-next.svg)](https://badge.fury.io/py/certbot-dns-aliyun-next)
+[![Download count](https://img.shields.io/pypi/dm/certbot-dns-aliyun-next)](https://img.shields.io/pypi/dm/certbot-dns-aliyun-next)
 
 ## 功能特性
 
